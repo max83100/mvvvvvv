@@ -13,19 +13,31 @@ class MainActivity : AppCompatActivity() {
     private val getData = GetData()
     private var liveDatastring = MutableLiveData<String>()
     val myLiveData = MyLiveData()
+    lateinit var observer: Observer<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        myLiveData.observe(this, Observer {
+        observer = Observer{
             test_text.text = it
-        })
+        }
+
 
         button.setOnClickListener{
             myLiveData.setValueTo(editText.text.toString())
         }
 
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        myLiveData.observe(this,observer)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        myLiveData.removeObserver(observer)
     }
 
 
