@@ -4,43 +4,42 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-    private val getData = GetData()
-    private var liveDatastring = MutableLiveData<String>()
-    val myLiveData = MyLiveData()
-    lateinit var observer: Observer<String>
+    lateinit var mainViewModel: MainViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        observer = Observer{
-            test_text.text = it
+        mainViewModel = ViewModelProvider(this, MainFactory(application,"Hola"))
+            .get(MainViewModel::class.java)
+
+
+
+
+
+
         }
-
-
-        button.setOnClickListener{
-            myLiveData.setValueTo(editText.text.toString())
-        }
-
-
-    }
 
     override fun onStart() {
         super.onStart()
-        myLiveData.observe(this,observer)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        myLiveData.removeObserver(observer)
+        mainViewModel.liveData.observe(this,Observer{
+            test_text.text = it
+        })
     }
 
 
 }
+
+
+
+
 
 
